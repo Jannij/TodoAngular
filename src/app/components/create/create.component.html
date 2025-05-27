@@ -1,0 +1,38 @@
+<main class="main">
+  <div class="centered">
+    <form
+      class="form__container box__shadow"
+      (ngSubmit)="submitTask()"
+      #taskForm="ngForm"
+    >
+      <h1>To Do App</h1>
+
+      <label for="task_title">Task</label>
+      <input
+        id="task_title"
+        name="title"
+        type="text"
+        [(ngModel)]="taskTitle"
+        required
+      />
+
+      <label for="task_description">Description</label>
+      <input
+        id="task_description"
+        name="description"
+        type="text"
+        [(ngModel)]="taskDescription"
+      />
+
+      <button type="submit" [disabled]="taskForm.invalid">Submit Task</button>
+    </form>
+
+      <h2>Task List</h2>
+
+    <div *ngFor="let task of tasks; trackBy: trackByDate" class="todo__task">
+      <h3>Title: {{ task.title }}</h3>
+      <p>Description: {{ task.description }}</p>
+    </div>
+
+  </div>
+</main>

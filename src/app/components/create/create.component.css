@@ -1,0 +1,28 @@
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.centered form {
+  display: flex;
+  flex-direction: column;
+
+  border: solid 1px white;
+  border-radius: 5px;
+  padding: 20px 100px;
+  box-shadow: 1px 3px 6px black;
+}
+
+.todo__task {
+  border: 2px solid orange;
+  border-radius: 5px;
+  width: 500px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.todo__task:hover {
+  border: 1px solid greenyellow;
+}
