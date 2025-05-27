@@ -24,5 +24,11 @@
 }
 
 .todo__task:hover {
-  border: 1px solid greenyellow;
+  border: 2px solid greenyellow;
+}
+
+@media (max-width: 580px) {
+  .todo__task {
+    width: 90%;
+  }
 }
