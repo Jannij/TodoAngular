@@ -29,10 +29,33 @@
 
       <h2>Task List</h2>
 
-    <div *ngFor="let task of tasks; trackBy: trackByDate" class="todo__task">
-      <h3>Title: {{ task.title }}</h3>
-      <p>Description: {{ task.description }}</p>
+    <div *ngFor="let task of tasks;
+       let i = index;
+       trackBy: trackByDate"
+       class="todo__task">
+      <div>
+        <h3>Title: {{ task.title }}</h3>
+        <p>Description: {{ task.description }}</p>
+      </div>
+      <div>
+        <button (click)="removeTask(i)" class="btn removeBtn">Remove</button>
+        <button (click)="completeTask(i)" class="btn completeBtn">Complete</button>
+      </div>
     </div>
 
+    <!-- COMPLETED TASKS -->
+    <h2 class="completedTasksHeader">Completed Tasks</h2>
+    <div *ngFor="let task of completedTasks;
+       let i = index;
+       trackBy: trackByDate"
+         class="todo__task completedTask">
+      <div>
+        <h3>Title: {{ task.title }}</h3>
+        <p>Description: {{ task.description }}</p>
+      </div>
+      <div>
+        <button (click)="removeCompletedTask(i)" class="btn removeBtn">Remove</button>
+      </div>
+    </div>
   </div>
 </main>

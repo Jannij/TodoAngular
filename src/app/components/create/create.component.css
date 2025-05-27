@@ -1,4 +1,5 @@
 .centered {
+  margin-top: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,6 +22,22 @@
   width: 500px;
   margin: 10px;
   padding: 10px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.todo__task > div {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
+
+@media (max-width: 500px) {
+  .todo__task {
+    flex-direction: column;
+  }
 }
 
 .todo__task:hover {
@@ -31,4 +48,37 @@
   .todo__task {
     width: 90%;
   }
+}
+
+.todo__task .btn {
+  margin-top: 20px;
+  font-size: 1em;
+  padding: 5px 10px;
+  color: white;
+  cursor: pointer;
+  border: solid 1px;
+  border-radius: 15px;
+}
+
+.todo__task .removeBtn {
+  background-color: red;
+}
+.todo__task .removeBtn:hover {
+  background-color: #ff3c3c;
+}
+
+.todo__task .completeBtn {
+  background-color: dodgerblue;
+}
+.todo__task .completeBtn:hover {
+  background-color: #52aaff;
+}
+
+.completedTasksHeader {
+  border-bottom:  1px solid grey;
+  border-top:  1px solid grey;
+}
+
+.completedTask {
+  border: solid 2px deepskyblue;
 }
