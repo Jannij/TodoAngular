@@ -28,6 +28,10 @@
   justify-content: space-between;
 }
 
+.todo__task > p {
+  overflow-wrap: break-word;
+}
+
 .todo__task > div {
   display: flex;
   flex-direction: column;
