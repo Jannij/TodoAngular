@@ -3,15 +3,28 @@ import { Task } from '../../models/task.model';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
 import {TaskService} from '../../service/task.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {MatCardActions, MatCardContent, MatCardModule} from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @Component({
   selector: 'app-todo',
   standalone: true,
   templateUrl: 'create.component.html',
+
   imports: [
     FormsModule,
-    NgForOf
+    NgForOf,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatCardActions,
+    MatCardContent,
+    MatButtonModule,
   ],
+
   styleUrls: ['./create.component.css']
 })
 export class TodoComponent {
@@ -24,7 +37,7 @@ export class TodoComponent {
   tasks: Task[] = JSON.parse(localStorage.getItem("tasks") || '[]');
   completedTasks: Task[] = JSON.parse(localStorage.getItem("completedTasks") || '[]');
 
-  trackByDate(index: number, task: Task): number {
+  trackByDate(_: number, task: Task): number {
     return task.date;
   }
 
