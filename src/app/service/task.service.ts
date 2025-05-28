@@ -5,11 +5,17 @@ import { Task } from '../models/task.model';
   providedIn: 'root'
 })
 export class TaskService {
-  private _tasks: Task[] = [
+  _tasks: Task[] = [
     { title: "TASK", description: "Task 1", date: Date.now() },
   ];
 
-  get tasks(): Task[] {
-    return this._tasks;
+  _completedTasks: Task[] = [];
+
+  writeTasks(tasks: Task[]): void {
+    this._tasks = tasks;
+  }
+
+  writeCompletedTasks(tasks: Task[]): void {
+    this._completedTasks = tasks;
   }
 }

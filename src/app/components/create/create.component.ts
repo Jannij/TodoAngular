@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Task } from '../../models/task.model';
 import {FormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
+import {TaskService} from '../../service/task.service';
 
 @Component({
   selector: 'app-todo',
@@ -14,6 +15,9 @@ import {NgForOf} from '@angular/common';
   styleUrls: ['./create.component.css']
 })
 export class TodoComponent {
+
+  taskService: TaskService = inject(TaskService);
+
   taskTitle: string = '';
   taskDescription: string = '';
 
@@ -31,16 +35,21 @@ export class TodoComponent {
   removeTask(index: number): void {
     this.remove(index, this.tasks);
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
+    this.taskService.writeTasks(this.tasks);
   }
 
   removeCompletedTask(index: number): void {
     this.remove(index, this.completedTasks);
+    localStorage.setItem('completedTasks', JSON.stringify(this.tasks));
   }
 
   completeTask(index: number): void {
     this.completedTasks.push(this.tasks[index]);
     localStorage.setItem("completedTasks", JSON.stringify(this.completedTasks));
     this.removeTask(index);
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
+    this.taskService.writeCompletedTasks(this.completedTasks);
+    console.log(this.taskService);
   }
 
   submitTask(): void {
@@ -52,6 +61,7 @@ export class TodoComponent {
       });
 
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
+      this.taskService.writeTasks(this.tasks);
 
       // Clear inputs
       this.taskTitle = '';
