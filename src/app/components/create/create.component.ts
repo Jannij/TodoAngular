@@ -1,20 +1,24 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Task } from '../../models/task.model';
 import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
+import {CommonModule, NgForOf} from '@angular/common';
 import {TaskService} from '../../service/task.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatCardActions, MatCardContent, MatCardModule} from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @Component({
   selector: 'app-todo',
   standalone: true,
   templateUrl: 'create.component.html',
+  providers: [TaskService],
 
   imports: [
+    CommonModule,
+    HttpClientModule,
     FormsModule,
     NgForOf,
     MatFormFieldModule,
@@ -27,15 +31,23 @@ import { MatButtonModule } from '@angular/material/button';
 
   styleUrls: ['./create.component.css']
 })
-export class TodoComponent {
+export class TodoComponent implements OnInit {
 
   taskService: TaskService = inject(TaskService);
 
   taskTitle: string = '';
   taskDescription: string = '';
 
-  tasks: Task[] = JSON.parse(localStorage.getItem("tasks") || '[]');
-  completedTasks: Task[] = JSON.parse(localStorage.getItem("completedTasks") || '[]');
+  ngOnInit(): void {
+    this.taskService.getTasks().subscribe((data: Task[]): void => {
+      this.taskService._tasks = data;
+      console.log(this.taskService._tasks);
+    });
+  }
+
+
+  tasks = (): Task[] => this.taskService._tasks;
+  completedTasks = (): Task[] => this.taskService._completedTasks;
 
   trackByDate(_: number, task: Task): number {
     return task.date;
@@ -46,39 +58,52 @@ export class TodoComponent {
   }
 
   removeTask(index: number): void {
-    this.remove(index, this.tasks);
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
-    this.taskService.writeTasks(this.tasks);
+    this.remove(index, this.taskService._tasks);
   }
 
   removeCompletedTask(index: number): void {
-    this.remove(index, this.completedTasks);
-    localStorage.setItem('completedTasks', JSON.stringify(this.tasks));
+    this.remove(index, this.taskService._completedTasks);
   }
 
   completeTask(index: number): void {
-    this.completedTasks.push(this.tasks[index]);
-    localStorage.setItem("completedTasks", JSON.stringify(this.completedTasks));
+    this.taskService._completedTasks.push(this.taskService._tasks[index]);
     this.removeTask(index);
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
-    this.taskService.writeCompletedTasks(this.completedTasks);
-    console.log(this.taskService);
   }
 
   submitTask(): void {
     if (this.taskTitle) {
-      this.tasks.push({
+      const taskObj: Task = {
         title: this.taskTitle,
         description: this.taskDescription,
         date: Date.now()
-      });
+      }
 
-      localStorage.setItem("tasks", JSON.stringify(this.tasks));
-      this.taskService.writeTasks(this.tasks);
+      this.addNewTask(taskObj);
 
       // Clear inputs
       this.taskTitle = '';
       this.taskDescription = '';
     }
   }
+
+  addNewTask(newTask: Task): void {
+    this.taskService.postTask(newTask).subscribe((added: Task): void => {
+      this.taskService._tasks.push(added);
+    });
+  }
+
+/*
+  async getTasks(): Promise<Task[] | null> {
+    try {
+      const response: Response = await fetch('http://localhost:5016/api/todo');
+
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+      return await response.json();
+    } catch (error) {
+      console.error('Failed to fetch tasks:', error);
+      return null;
+    }
+  }
+*/
 }

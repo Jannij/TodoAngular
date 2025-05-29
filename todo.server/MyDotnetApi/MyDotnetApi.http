@@ -1,0 +1,14 @@
+@MyDotnetApi_HostAddress = http://localhost:5016
+
+GET {{MyDotnetApi_HostAddress}}/api/todo/
+Accept: application/json
+
+### POST new todo item
+POST {{MyDotnetApi_HostAddress}}/api/todo
+Content-Type: application/json
+
+{
+  "title": "Learn REST Client",
+  "description": "Daco popis",
+  "date": 55555555
+}
