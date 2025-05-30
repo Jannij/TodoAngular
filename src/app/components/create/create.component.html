@@ -22,7 +22,7 @@
 
     <h2>Task List</h2>
 
-    <mat-card *ngFor="let task of tasks(); let i = index; trackBy: trackByDate" class="todo__task">
+    <mat-card *ngFor="let task of tasks(); let i = index; trackBy trackByDate" class="todo__task">
       <mat-card-content>
         <h3>Title: {{ task.title }}</h3>
         <p>Description: {{ task.description }}</p>

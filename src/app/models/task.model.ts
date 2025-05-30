@@ -1,5 +1,5 @@
 export interface Task {
   title: string;
   description?: string;
-  date: number;
+  date: string;
 }

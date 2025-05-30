@@ -33,7 +33,7 @@ import {HttpClientModule} from '@angular/common/http';
 })
 export class TodoComponent implements OnInit {
 
-  taskService: TaskService = inject(TaskService);
+  public taskService: TaskService = inject(TaskService);
 
   taskTitle: string = '';
   taskDescription: string = '';
@@ -43,16 +43,22 @@ export class TodoComponent implements OnInit {
       this.taskService._tasks = data;
       console.log(this.taskService._tasks);
     });
+
+    this.taskService.getCompletedTasks().subscribe((data: Task[]): void => {
+      this.taskService._completedTasks = data;
+    })
   }
 
 
   tasks = (): Task[] => this.taskService._tasks;
   completedTasks = (): Task[] => this.taskService._completedTasks;
 
-  trackByDate(_: number, task: Task): number {
-    return task.date;
+  trackByDate(index: number, task: Task): number {
+    console.log(index, task);
+    return Number(task?.date || index);
   }
 
+  // General remove
   private remove(index: number, taskList: Task[]): void {
     taskList.splice(index, 1);
   }
@@ -75,7 +81,7 @@ export class TodoComponent implements OnInit {
       const taskObj: Task = {
         title: this.taskTitle,
         description: this.taskDescription,
-        date: Date.now()
+        date: Date.now().toString()
       }
 
       this.addNewTask(taskObj);
@@ -87,8 +93,8 @@ export class TodoComponent implements OnInit {
   }
 
   addNewTask(newTask: Task): void {
-    this.taskService.postTask(newTask).subscribe((added: Task): void => {
-      this.taskService._tasks.push(added);
+    this.taskService.postTask(newTask).subscribe((): void => {
+      this.taskService._tasks.push(newTask);
     });
   }
 

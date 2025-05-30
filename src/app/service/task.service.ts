@@ -25,14 +25,30 @@ export class TaskService {
     );
   }
 
-  postTask(task: Task): Observable<Task> {
-    return this.http.post<Task>(`${this.apiUrl}`, task).pipe(
-      catchError((error: Error): Observable<Task> => {
+  postTask(task: Task): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}`, task).pipe(
+      catchError((error: Error): Observable<never> => {
         console.error('Error adding task:', error);
-        return of(task); // return input task on error (optional)
+        return of();
       })
     );
   }
 
+  getCompletedTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.apiUrl}/completed`).pipe(
+      catchError((error: Error): Observable<Task[]> => {
+        console.error('Error fetching completed tasks', error);
+        return of([]);
+      })
+    )
+  }
 
+  postCompletedTasks(task: Task): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/completed`, task).pipe(
+      catchError((error: Error): Observable<never> => {
+        console.error('Error adding completed tasks:', error);
+        return of();
+      })
+    );
+  }
 }

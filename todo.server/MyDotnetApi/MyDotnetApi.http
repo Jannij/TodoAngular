@@ -10,5 +10,8 @@ Content-Type: application/json
 {
   "title": "Learn REST Client",
   "description": "Daco popis",
-  "date": 55555555
+  "date": "55555555"
 }
+
+### GET Completed Tasks:
+GET {{MyDotnetApi_HostAddress}}/api/todo/completed/
