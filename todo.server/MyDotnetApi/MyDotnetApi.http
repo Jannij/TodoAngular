@@ -10,7 +10,7 @@ Content-Type: application/json
 {
   "title": "Learn REST Client",
   "description": "Daco popis",
-  "date": "55555555"
+  "id": "55555555"
 }
 
 ### GET Completed Tasks:

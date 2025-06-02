@@ -53,9 +53,9 @@ export class TodoComponent implements OnInit {
   tasks = (): Task[] => this.taskService._tasks;
   completedTasks = (): Task[] => this.taskService._completedTasks;
 
-  trackByDate(index: number, task: Task): number {
+  trackById(index: number, task: Task): number {
     console.log(index, task);
-    return Number(task?.date || index);
+    return Number(task?.id || index);
   }
 
   // General remove
@@ -81,7 +81,7 @@ export class TodoComponent implements OnInit {
       const taskObj: Task = {
         title: this.taskTitle,
         description: this.taskDescription,
-        date: Date.now().toString()
+        id: Date.now().toString()
       }
 
       this.addNewTask(taskObj);

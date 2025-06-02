@@ -1,11 +1,12 @@
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using MyDotnetApi.Models; // Make sure this matches your namespace
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add CORS to allow Angular localhost
+// Add CORS for Angular (localhost:4200)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularDevClient", policy =>
@@ -16,10 +17,16 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Add PostgreSQL DbContext
+builder.Services.AddDbContext<TodoContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
+// Use CORS
 app.UseCors("AllowAngularDevClient");
 
 app.MapControllers();

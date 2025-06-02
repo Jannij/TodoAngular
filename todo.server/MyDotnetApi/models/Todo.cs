@@ -1,15 +1,24 @@
 ﻿namespace MyDotnetApi.Models;
-    public class Todo
-    {
-        public required string Title { get; set; } = string.Empty;
-        public string? Description { get; set; }
-        public required string Date { get; set; }  // in String because of large number;
+using System.ComponentModel.DataAnnotations;
 
-        public Todo(){}
-        public Todo(string title, string? description, string date)
-        {
-            Title = title;
-            Description = description;
-            Date = date;
-        }
+public class Todo
+{
+    [Key]
+    public string Id { get; set; }  // Must be passed from frontend
+
+    [Required]
+    public string Title { get; set; } = string.Empty;
+
+    public string? Description { get; set; }
+
+    public bool IsCompleted { get; set; } = false;
+
+    public Todo() {}
+
+    public Todo(string id, string title, string? description)
+    {
+        Id = id;
+        Title = title;
+        Description = description;
     }
+}

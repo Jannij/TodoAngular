@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyDotnetApi.Models;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace MyDotnetApi.Controllers
 {
@@ -8,38 +10,55 @@ namespace MyDotnetApi.Controllers
     [Route("api/todo")]
     public class TodoController : ControllerBase
     {
-        private static readonly List<Todo> Items = new List<Todo>
+        private readonly TodoContext _context;
+
+        public TodoController(TodoContext context)
         {
-            new Todo { Title = "Buy groceries", Description = "Milk, eggs", Date = "20250529" },
-            new Todo { Title = "Walk the dog", Description = "Evening walk", Date = "20250529" },
-            new Todo { Title = "Write code", Description = "Finish project", Date = "20250529" }
-        };
+            _context = context;
+        }
 
-				private static readonly List<Todo> CompletedItems = new List<Todo>
-        {
-            new Todo { Title = "Completed", Description = "Done", Date = "202508000" },
-        };
-
-				// Tasks inComplete
-
+        // Get all uncompleted tasks
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(Items);
+            var items = await _context.Todos
+                .Where(t => !t.IsCompleted)
+                .ToListAsync();
+
+            return Ok(items);
         }
 
+        // Add a new task
         [HttpPost]
-        public void Post([FromBody] Todo newItem)
+        public async Task<IActionResult> Post([FromBody] Todo newItem)
         {
-            Items.Add(newItem);
+            _context.Todos.Add(newItem);
+            await _context.SaveChangesAsync();
+            return Ok(newItem);
         }
 
-				// Tasks inComplete
-				[HttpGet]
-				[Route("completed/")]
-				public IActionResult GetCompleted()
-				{
-						return Ok(CompletedItems);
-				}
+        // Get completed tasks
+        [HttpGet("completed")]
+        public async Task<IActionResult> GetCompleted()
+        {
+            var items = await _context.Todos
+                .Where(t => t.IsCompleted)
+                .ToListAsync();
+
+            return Ok(items);
+        }
+
+        // Mark task as completed
+        [HttpPut("{id}/complete")]
+        public async Task<IActionResult> MarkCompleted(string id)
+        {
+            var task = await _context.Todos.FindAsync(id);
+            if (task == null) return NotFound();
+
+            task.IsCompleted = true;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
