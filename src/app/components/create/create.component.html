@@ -28,7 +28,7 @@
         <p>Description: {{ task.description }}</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="warn" (click)="removeTask(i)">Remove</button>
+        <button mat-button color="warn" (click)="removeTaskById(task.id)">Remove</button>
         <button mat-button color="accent" (click)="completeTask(i)">Complete</button>
       </mat-card-actions>
     </mat-card>
@@ -40,7 +40,7 @@
         <p>Description: {{ task.description }}</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="warn" (click)="removeCompletedTask(i)">Remove</button>
+        <button mat-button color="warn" (click)="removeTaskById(task.id)">Remove</button>
       </mat-card-actions>
     </mat-card>
   </div>

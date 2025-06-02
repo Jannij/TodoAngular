@@ -28,6 +28,7 @@ export class TaskService {
   constructor(private http: HttpClient) {}
 
   getTasks(): Observable<Task[]> {
+    console.log('Getting Tasks normal');
     return this.http.get<Task[]>(this.apiUrl).pipe(
       catchError((error): Observable<Task[]> => {
         console.error('Error fetching tasks', error);
@@ -54,10 +55,20 @@ export class TaskService {
     );
   }
 
-  markTaskCompleted(id: string): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}/complete`, {}).pipe(
+  markTaskCompleted(id: string, task: Task): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/complete`, task).pipe(
       catchError((error): Observable<void> => {
         console.error('Error marking task completed:', error);
+        return of(undefined); // Return an Observable of type void
+      })
+    );
+  }
+
+
+  deleteTask(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      catchError((error): Observable<void> => {
+        console.log('Error deleting task', error);
         return of();
       })
     );

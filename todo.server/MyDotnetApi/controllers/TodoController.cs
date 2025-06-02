@@ -37,6 +37,19 @@ namespace MyDotnetApi.Controllers
             return Ok(newItem);
         }
 
+				// Remove task
+				[HttpDelete("{id}")]
+				public async Task<IActionResult> Delete(string id)
+				{
+						var task = await _context.Todos.FindAsync(id);
+						if (task == null) return NotFound();
+
+						_context.Todos.Remove(task);
+						await _context.SaveChangesAsync();
+
+						return NoContent();
+				}
+
         // Get completed tasks
         [HttpGet("completed")]
         public async Task<IActionResult> GetCompleted()

@@ -58,27 +58,36 @@ export class TodoComponent implements OnInit {
     return Number(task?.id || index);
   }
 
-  // General remove
-  private remove(index: number, taskList: Task[]): void {
-    taskList.splice(index, 1);
+  removeTaskById(id: string): void {
+    this.taskService.deleteTask(id).subscribe(() => {
+      this.taskService.tasks = this.taskService.tasks.filter(task => task.id !== id);
+    });
   }
 
   removeTask(index: number): void {
-    this.remove(index, this.taskService.tasks);
+    const task: Task = this.taskService.tasks[index];
+
+    this.taskService.deleteTask(task.id).subscribe((): void => {
+      this.taskService.tasks.splice(index, 1);
+    });
   }
 
   removeCompletedTask(index: number): void {
-    this.remove(index, this.taskService.completedTasks);
+    const task: Task = this.taskService.completedTasks[index];
+
+    this.taskService.deleteTask(task.id).subscribe((): void => {
+      this.taskService.completedTasks.splice(index, 1);
+    });
   }
 
 
   completeTask(index: number): void {
-    const task = this.taskService.tasks[index];
+    const task: Task = this.taskService.tasks[index];
 
-    this.taskService.markTaskCompleted(task.id).subscribe(() => {
-      task.isCompleted = true;
-      this.taskService.completedTasks.push(task);
-      this.removeTask(index);
+    this.taskService.markTaskCompleted(task.id, {...task, isCompleted: true}).subscribe(() => {
+      this.taskService.getCompletedTasks().subscribe((data: Task[]): void => {
+        this.taskService.completedTasks = data;
+      })
     });
   }
 
