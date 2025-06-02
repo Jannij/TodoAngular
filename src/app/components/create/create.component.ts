@@ -40,18 +40,18 @@ export class TodoComponent implements OnInit {
 
   ngOnInit(): void {
     this.taskService.getTasks().subscribe((data: Task[]): void => {
-      this.taskService._tasks = data;
-      console.log(this.taskService._tasks);
+      this.taskService.tasks = data;
+      console.log(this.taskService.tasks);
     });
 
     this.taskService.getCompletedTasks().subscribe((data: Task[]): void => {
-      this.taskService._completedTasks = data;
+      this.taskService.completedTasks = data;
     })
   }
 
 
-  tasks = (): Task[] => this.taskService._tasks;
-  completedTasks = (): Task[] => this.taskService._completedTasks;
+  tasks = (): Task[] => this.taskService.tasks;
+  completedTasks = (): Task[] => this.taskService.completedTasks;
 
   trackById(index: number, task: Task): number {
     console.log(index, task);
@@ -64,24 +64,32 @@ export class TodoComponent implements OnInit {
   }
 
   removeTask(index: number): void {
-    this.remove(index, this.taskService._tasks);
+    this.remove(index, this.taskService.tasks);
   }
 
   removeCompletedTask(index: number): void {
-    this.remove(index, this.taskService._completedTasks);
+    this.remove(index, this.taskService.completedTasks);
   }
 
+
   completeTask(index: number): void {
-    this.taskService._completedTasks.push(this.taskService._tasks[index]);
-    this.removeTask(index);
+    const task = this.taskService.tasks[index];
+
+    this.taskService.markTaskCompleted(task.id).subscribe(() => {
+      task.isCompleted = true;
+      this.taskService.completedTasks.push(task);
+      this.removeTask(index);
+    });
   }
+
 
   submitTask(): void {
     if (this.taskTitle) {
       const taskObj: Task = {
         title: this.taskTitle,
         description: this.taskDescription,
-        id: Date.now().toString()
+        id: Date.now().toString(),
+        isCompleted: false,
       }
 
       this.addNewTask(taskObj);
@@ -94,22 +102,8 @@ export class TodoComponent implements OnInit {
 
   addNewTask(newTask: Task): void {
     this.taskService.postTask(newTask).subscribe((): void => {
-      this.taskService._tasks.push(newTask);
+      this.taskService.tasks.push(newTask);
     });
   }
 
-/*
-  async getTasks(): Promise<Task[] | null> {
-    try {
-      const response: Response = await fetch('http://localhost:5016/api/todo');
-
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-      return await response.json();
-    } catch (error) {
-      console.error('Failed to fetch tasks:', error);
-      return null;
-    }
-  }
-*/
 }

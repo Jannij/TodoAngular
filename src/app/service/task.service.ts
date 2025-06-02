@@ -7,46 +7,57 @@ import { Observable, catchError, of } from 'rxjs';
   providedIn: 'root'
 })
 export class TaskService {
+  private _tasks: Task[] = [];
+  private _completedTasks: Task[] = [];
+
+  get tasks(): Task[] {
+    return this._tasks;
+  }
+  set tasks(tasks: Task[]) {
+    this._tasks = tasks;
+  }
+  get completedTasks(): Task[] {
+    return this._completedTasks;
+  }
+  set completedTasks(completedTasks: Task[]) {
+    this._completedTasks = completedTasks;
+  }
 
   private apiUrl: string = 'http://localhost:5016/api/todo';
 
-  _tasks: Task[] = [];
-
-  _completedTasks: Task[] = [];
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getTasks(): Observable<Task[]> {
     return this.http.get<Task[]>(this.apiUrl).pipe(
-      catchError((error: Error): Observable<Task[]> => {
+      catchError((error): Observable<Task[]> => {
         console.error('Error fetching tasks', error);
         return of([]);
       })
     );
   }
 
-  postTask(task: Task): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}`, task).pipe(
-      catchError((error: Error): Observable<never> => {
+  postTask(task: Task): Observable<Task | null> {
+    return this.http.post<Task>(this.apiUrl, task).pipe(
+      catchError((error): Observable<null> => {
         console.error('Error adding task:', error);
-        return of();
+        return of(null);
       })
     );
   }
 
   getCompletedTasks(): Observable<Task[]> {
     return this.http.get<Task[]>(`${this.apiUrl}/completed`).pipe(
-      catchError((error: Error): Observable<Task[]> => {
+      catchError((error): Observable<Task[]> => {
         console.error('Error fetching completed tasks', error);
         return of([]);
       })
-    )
+    );
   }
 
-  postCompletedTasks(task: Task): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/completed`, task).pipe(
-      catchError((error: Error): Observable<never> => {
-        console.error('Error adding completed tasks:', error);
+  markTaskCompleted(id: string): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/complete`, {}).pipe(
+      catchError((error): Observable<void> => {
+        console.error('Error marking task completed:', error);
         return of();
       })
     );
