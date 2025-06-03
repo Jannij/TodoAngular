@@ -20,4 +20,8 @@ describe('CreateComponent', (): void => {
   it('should create', (): void => {
     expect(component).toBeTruthy();
   });
+
+  it('should get tasks', (): void => {
+    expect(component.tasks()).toEqual([]);
+  })
 });
