@@ -40,7 +40,7 @@
         <p>Description: {{ task.description }}</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="warn" (click)="removeTaskById(task.id)">Remove</button>
+        <button mat-button color="warn" (click)="removeCompletedTaskById(task.id)">Remove</button>
       </mat-card-actions>
     </mat-card>
   </div>

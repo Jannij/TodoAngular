@@ -41,7 +41,6 @@ export class TodoComponent implements OnInit {
   ngOnInit(): void {
     this.taskService.getTasks().subscribe((data: Task[]): void => {
       this.taskService.tasks = data;
-      console.log(this.taskService.tasks);
     });
 
     this.taskService.getCompletedTasks().subscribe((data: Task[]): void => {
@@ -54,41 +53,40 @@ export class TodoComponent implements OnInit {
   completedTasks = (): Task[] => this.taskService.completedTasks;
 
   trackById(index: number, task: Task): number {
-    console.log(index, task);
     return Number(task?.id || index);
   }
 
   removeTaskById(id: string): void {
     this.taskService.deleteTask(id).subscribe(() => {
       this.taskService.tasks = this.taskService.tasks.filter(task => task.id !== id);
+
+      this.taskService.getTasks().subscribe((data: Task[]): void => {
+        this.taskService.tasks = data;
+      });
     });
   }
 
-  removeTask(index: number): void {
-    const task: Task = this.taskService.tasks[index];
+  removeCompletedTaskById(id: string): void {
+    this.taskService.deleteTask(id).subscribe(() => {
+      this.taskService.completedTasks = this.taskService.completedTasks.filter(task => task.id !== id);
 
-    this.taskService.deleteTask(task.id).subscribe((): void => {
-      this.taskService.tasks.splice(index, 1);
+      this.taskService.getCompletedTasks().subscribe((data: Task[]): void => {
+        this.taskService.completedTasks = data;
+      });
     });
   }
-
-  removeCompletedTask(index: number): void {
-    const task: Task = this.taskService.completedTasks[index];
-
-    this.taskService.deleteTask(task.id).subscribe((): void => {
-      this.taskService.completedTasks.splice(index, 1);
-    });
-  }
-
 
   completeTask(index: number): void {
     const task: Task = this.taskService.tasks[index];
+    console.log("HHAHA");
 
     this.taskService.markTaskCompleted(task.id, {...task, isCompleted: true}).subscribe(() => {
       this.taskService.getCompletedTasks().subscribe((data: Task[]): void => {
         this.taskService.completedTasks = data;
-      })
+      });
     });
+
+    this.taskService.tasks.splice(index, 1);
   }
 
 

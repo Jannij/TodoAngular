@@ -59,7 +59,7 @@ export class TaskService {
     return this.http.put<void>(`${this.apiUrl}/${id}/complete`, task).pipe(
       catchError((error): Observable<void> => {
         console.error('Error marking task completed:', error);
-        return of(undefined); // Return an Observable of type void
+        return of(); // Return an Observable of type void
       })
     );
   }

@@ -71,7 +71,7 @@ namespace MyDotnetApi.Controllers
             task.IsCompleted = true;
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
     }
 }

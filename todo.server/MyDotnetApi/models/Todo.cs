@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 public class Todo
 {
     [Key]
-    public string Id { get; set; }  // Must be passed from frontend
+   	public required string Id { get; set; }  // Must be passed from frontend
 
     [Required]
     public string Title { get; set; } = string.Empty;
