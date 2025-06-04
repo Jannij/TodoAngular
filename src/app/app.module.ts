@@ -31,6 +31,8 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     MatCardModule,
     MatFormFieldModule,
     AppComponent,
+    AppComponent,
+    AppComponent,
   ],
 })
 export class AppModule {}

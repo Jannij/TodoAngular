@@ -36,7 +36,13 @@ namespace MyDotnetApi.Controllers
         {
             var jwtSettings = _configuration.GetSection("Jwt");
 
-            var key = new SymmetricSecurityKey(Convert.FromBase64String(jwtSettings["Key"]));
+            var base64Key = jwtSettings["Key"];
+            if (string.IsNullOrEmpty(base64Key))
+            {
+                throw new InvalidOperationException("JWT key is missing in configuration.");
+            }
+
+            var key = new SymmetricSecurityKey(Convert.FromBase64String(base64Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
