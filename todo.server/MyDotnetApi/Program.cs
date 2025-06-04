@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using MyDotnetApi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using MyDotnetApi.Models; // Make sure this matches your namespace
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,13 +25,37 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<TodoContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add controllers
+// 🔐 JWT Authentication
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "your_super_secure_key_here";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "your-app";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "your-app-users";
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Use CORS
 app.UseCors("AllowAngularDevClient");
+
+// 🔐 Enable middleware for authentication and authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
