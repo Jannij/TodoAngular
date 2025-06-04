@@ -73,4 +73,8 @@ export class TaskService {
       })
     );
   }
+
+  getTodos(): Observable<Task[]> {
+    return this.http.get<Task[]>('http://localhost:5000/api/todo');
+  }
 }

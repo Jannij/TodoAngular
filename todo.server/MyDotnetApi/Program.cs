@@ -26,7 +26,7 @@ builder.Services.AddDbContext<TodoContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 🔐 JWT Authentication
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "your_super_secure_key_here";
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "4fOuvJd65PggKs44GEq0Jsr8q/QSS8m6iBlMXSs8erI=";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "your-app";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "your-app-users";
 
