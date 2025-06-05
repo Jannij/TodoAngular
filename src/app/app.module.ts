@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -12,16 +12,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AppComponent } from './app.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { AppRoutingModule } from './app.routes';
 
 @NgModule({
   declarations: [
-
+    AppComponent,
     // other components
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   imports: [
+    BrowserModule,
     HttpClientModule,
     BrowserModule,
     FormsModule,
@@ -30,9 +32,8 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
     MatInputModule,
     MatCardModule,
     MatFormFieldModule,
-    AppComponent,
-    AppComponent,
-    AppComponent,
+    AppRoutingModule,
   ],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
