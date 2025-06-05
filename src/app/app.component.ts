@@ -15,5 +15,5 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'todo';
+  title: string = 'todo';
 }

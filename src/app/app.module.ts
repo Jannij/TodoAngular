@@ -13,10 +13,15 @@ import { AppComponent } from './app.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { AppRoutingModule } from './app.routes';
+import { LoginComponent } from './components/login/login.component';
+import {TodoComponent} from './components/create/create.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
+    TodoComponent
+
     // other components
   ],
   providers: [
